@@ -1,0 +1,49 @@
+/* 1. Import Font Google (Poppins untuk Modern, Merriweather untuk kesan Homemade/Klasik) */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* 2. Directive Tailwind (WAJIB ADA agar Tailwind berfungsi) */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 3. Global Styles (Pengaturan Umum) */
+html {
+  scroll-behavior: smooth; /* Efek halus saat scroll halaman */
+}
+
+body {
+  /* Menggunakan warna tema kita */
+  background-color: #FDFBF7; /* Puyuh Cream */
+  color: #264653;            /* Puyuh Dark */
+  font-family: 'Poppins', sans-serif; /* Font default tulisan biasa */
+  
+  /* PENTING: Reset bawaan Vite agar layout tidak terjepit di tengah */
+  margin: 0;
+  display: block; 
+  min-width: 100%;
+  min-height: 100vh;
+}
+
+/* Judul (Heading) menggunakan font Serif agar terlihat Premium & Homemade */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', serif;
+}
+
+/* 4. Kustomisasi Scrollbar (Batang Scroll) agar lebih cantik */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FDFBF7; 
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #F4A261; /* Warna Gold */
+  border-radius: 6px;
+  border: 3px solid #FDFBF7; /* Memberi jarak putih di pinggir */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #e76f51; /* Berubah warna sedikit saat disentuh mouse */
+}
