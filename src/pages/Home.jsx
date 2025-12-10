@@ -67,8 +67,6 @@ const Home = () => {
                className="rounded-3xl shadow-2xl border-4 border-puyuh-gold/30 w-full max-w-md mx-auto object-cover transform hover:scale-105 transition duration-500"
              />
              
-             {/* Hiasan Pemanis di belakang gambar */}
-             <div className="absolute -z-10 top-[-20px] right-[-20px] w-full h-full border-2 border-puyuh-gold/20 rounded-3xl hidden md:block"></div>
           </div>
 
         </div>
@@ -120,7 +118,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center gap-12 relative z-10">
            <div className="md:w-1/2">
               <img 
-                src="https://images.unsplash.com/photo-1564834724105-918b73d1b9e0?q=80&w=1000&auto=format&fit=crop" 
+                src="https://www.dapurkobe.co.id/wp-content/uploads/telur-puyuh-masak-pedas.jpg" 
                 alt="Puyuh Goreng Lezat" 
                 className="rounded-2xl shadow-2xl transform md:-rotate-2 hover:rotate-0 transition duration-500"
               />

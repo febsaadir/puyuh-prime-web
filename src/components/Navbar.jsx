@@ -7,7 +7,6 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
-  // Efek transisi: Saat discroll, navbar jadi putih & ada bayangan
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 20) {
@@ -20,11 +19,21 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Fungsi menandai menu yang sedang aktif
-  const isActive = (path) => {
-    return location.pathname === path 
-      ? "text-puyuh-gold font-bold" 
-      : "text-gray-600 hover:text-puyuh-gold transition-colors duration-300";
+  // LOGIKA WARNA BARU:
+  // Jika discroll: teks abu-abu gelap. Jika di atas (transparan): teks putih terang.
+  const textColor = scrolled ? "text-gray-700" : "text-white";
+  const hoverColor = "hover:text-puyuh-gold";
+
+  // Fungsi menandai menu aktif
+  const getMenuClass = (path) => {
+    const baseClass = "text-sm uppercase tracking-wide font-medium transition-colors duration-300";
+    
+    // Jika menu ini aktif (sedang dibuka)
+    if (location.pathname === path) {
+      return `${baseClass} text-puyuh-gold font-bold`;
+    }
+    // Jika tidak aktif
+    return `${baseClass} ${textColor} ${hoverColor}`;
   };
 
   const menuItems = [
@@ -44,44 +53,43 @@ const Navbar = () => {
           {/* 1. LOGO BRAND */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center gap-2 group">
-              {/* Ikon Tas Belanja */}
               <div className="bg-puyuh-gold p-2 rounded-lg text-white shadow-md group-hover:scale-110 transition duration-300">
                 <ShoppingBag size={20} />
               </div>
-              <h1 className="font-serif text-2xl font-bold text-puyuh-dark tracking-wide">
+              {/* Warna tulisan PuyuhPrime juga menyesuaikan scroll */}
+              <h1 className={`font-serif text-2xl font-bold tracking-wide ${scrolled ? 'text-puyuh-dark' : 'text-white'}`}>
                 Puyuh<span className="text-puyuh-gold">Prime</span>
               </h1>
             </Link>
           </div>
 
-          {/* 2. MENU DESKTOP (Layar Laptop) */}
+          {/* 2. MENU DESKTOP */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-center space-x-8">
               {menuItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`text-sm uppercase tracking-wide font-medium ${isActive(item.path)}`}
+                  className={getMenuClass(item.path)}
                 >
                   {item.name}
                 </Link>
               ))}
               
-              {/* Tombol Contact Us yang Menonjol */}
               <Link 
                 to="/kontak" 
-                className="bg-puyuh-dark text-white px-6 py-2.5 rounded-full font-medium hover:bg-puyuh-gold hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                className="bg-puyuh-gold text-white px-6 py-2.5 rounded-full font-medium hover:bg-white hover:text-puyuh-gold hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
               >
                 Contact Us
               </Link>
             </div>
           </div>
 
-          {/* 3. TOMBOL MENU HP (Hamburger) */}
+          {/* 3. TOMBOL MENU HP */}
           <div className="-mr-2 flex md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-puyuh-dark hover:text-puyuh-gold focus:outline-none"
+              className={`inline-flex items-center justify-center p-2 rounded-md focus:outline-none ${scrolled ? 'text-puyuh-dark' : 'text-white'}`}
             >
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
@@ -108,7 +116,7 @@ const Navbar = () => {
             <Link
               to="/kontak"
               onClick={() => setIsOpen(false)}
-              className="block mt-4 text-center w-full bg-puyuh-dark text-white px-3 py-3 rounded-xl font-bold hover:bg-puyuh-gold transition"
+              className="block mt-4 text-center w-full bg-puyuh-gold text-white px-3 py-3 rounded-xl font-bold hover:bg-puyuh-dark transition"
             >
               Contact Us
             </Link>
