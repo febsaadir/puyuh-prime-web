@@ -1,88 +1,22 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, Star, Tag, Filter } from 'lucide-react';
+import { ShoppingCart, Star, Tag } from 'lucide-react';
+
+// IMPORT DATA DARI FILE TERPISAH
+import { products } from '../data/products';
 
 const Produk = () => {
   // State untuk filter kategori
   const [activeCategory, setActiveCategory] = useState("Semua");
 
-  // DATABASE PRODUK (Nanti ganti fotonya disini)
-  const products = [
-    // KATEGORI: KONSUMSI
-    {
-      id: 1,
-      name: "Telur Puyuh Grade A",
-      category: "Konsumsi",
-      price: "Rp 40.000 / tray",
-      desc: "Telur segar pilihan dengan cangkang kuat dan kuning telur pekat. Tinggi protein untuk keluarga.",
-      image: "https://media.istockphoto.com/id/605767152/id/foto/telur-puyuh-dalam-mangkuk.jpg?s=612x612&w=0&k=20&c=_XFDuPjhiqIWKKbJEb33iMXb9owOInJJKEvDcuUXnRM=",
-      tag: "Best Seller"
-    },
-    {
-      id: 2,
-      name: "Daging Puyuh Bersih",
-      category: "Konsumsi",
-      price: "Rp 85.000 / pack",
-      desc: "Daging burung puyuh segar yang sudah dibersihkan (karkas). Tekstur lembut, rendah kolesterol.",
-      image: "https://png.pngtree.com/thumb_back/fh260/background/20221111/pngtree-on-a-dark-wooden-background-quails-with-fresh-raw-meat-are-prepared-for-cooking-photo-image_41224622.jpg",
-      tag: "Segar"
-    },
-    {
-      id: 3,
-      name: "Puyuh Ungkep Premium",
-      category: "Konsumsi",
-      price: "Rp 95.000 / box",
-      desc: "Olahan catering siap goreng. Bumbu rempah meresap sampai ke tulang. Praktis & Lezat.",
-      image: "https://media.istockphoto.com/id/2115162405/id/foto/daging-puyuh-mentah-di-talenan-dengan-rempah-rempah-dan-rempah-rempah-tampilan-atas.jpg?s=612x612&w=0&k=20&c=0_V65QWB6Yg1SdA1A5t51vy3tEnQMv0k6wNAHJbm1Ko=",
-      tag: "Siap Saji"
-    },
-    
-    // KATEGORI: PETERNAKAN
-    {
-      id: 4,
-      name: "Pakan Puyuh Petelur",
-      category: "Peternakan",
-      price: "Rp 380.000 / sak",
-      desc: "Pakan komplit nutrisi tinggi untuk memaksimalkan produksi telur harian ternak Anda.",
-      image: "https://www.sarirosaasih.com/asset_front/image/kukila_puyuh_petelur/pakan_kukila_puyuh_starter.png",
-      tag: "Nutrisi Tinggi"
-    },
-    {
-      id: 5,
-      name: "Molase Tebu Murni",
-      category: "Peternakan",
-      price: "Rp 15.000 / botol",
-      desc: "Tetes tebu murni sebagai campuran pakan atau fermentasi probiotik ternak.",
-      image: "https://images.unsplash.com/photo-1611080927967-b5161099e049?q=80&w=1000&auto=format&fit=crop",
-      tag: "Murni"
-    },
-    {
-      id: 6,
-      name: "EM4 Peternakan",
-      category: "Peternakan",
-      price: "Rp 25.000 / botol",
-      desc: "Bakteri fermentasi untuk menyehatkan pencernaan ternak dan mengurangi bau kandang.",
-      image: "https://cf.shopee.co.id/file/69c84918451996515867946110023a85", // Placeholder
-      tag: "Probiotik"
-    },
-    {
-      id: 7,
-      name: "Desinfektan Kandang",
-      category: "Peternakan",
-      price: "Rp 45.000 / liter",
-      desc: "Cairan pembersih ampuh membasmi virus dan bakteri. Aman untuk lingkungan kandang.",
-      image: "https://images.unsplash.com/photo-1584634731339-252c581abfc5?q=80&w=1000&auto=format&fit=crop",
-      tag: "Higienis"
-    }
-  ];
-
   // Logic Filter
   const categories = ["Semua", "Konsumsi", "Peternakan"];
+  
   const filteredProducts = activeCategory === "Semua" 
     ? products 
     : products.filter(item => item.category === activeCategory);
 
-  // Fungsi WA Direct
+  // Fungsi WA Direct (Nomor sudah disesuaikan dengan kode Anda sebelumnya)
   const handleOrder = (productName) => {
     const message = `Halo PuyuhPrime, saya ingin memesan ${productName}. Apakah stok tersedia?`;
     window.open(`https://wa.me/628558288704?text=${encodeURIComponent(message)}`, "_blank");
@@ -94,7 +28,7 @@ const Produk = () => {
       {/* --- HEADER SECTION --- */}
       <div className="bg-puyuh-dark text-white pt-32 pb-16 px-4 text-center rounded-b-[3rem] shadow-xl relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full opacity-10">
-           {/* Pattern Background Tipis */}
+           {/* Pattern Background */}
            <div className="w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
         </div>
         
@@ -105,7 +39,7 @@ const Produk = () => {
           Produk Unggulan Kami
         </motion.h1>
         <p className="text-gray-300 max-w-2xl mx-auto text-lg relative z-10">
-          Dari telur segar untuk sarapan keluarga hingga kebutuhan nutrisi peternakan Anda, semua tersedia di PuyuhPrime dengan kualitas terbaik.
+          Dari telur segar, olahan lezat, puyuh hidup, hingga kebutuhan nutrisi peternakan. Kualitas terbaik untuk Anda.
         </p>
       </div>
 
@@ -193,7 +127,7 @@ const Produk = () => {
           </AnimatePresence>
         </motion.div>
 
-        {/* --- Empty State (Jika tidak ada produk) --- */}
+        {/* --- Empty State --- */}
         {filteredProducts.length === 0 && (
           <div className="text-center py-20">
             <p className="text-gray-400 text-lg">Produk kategori ini belum tersedia.</p>
@@ -207,7 +141,7 @@ const Produk = () => {
             <div className="relative z-10 md:w-2/3">
                <h2 className="font-serif text-3xl font-bold mb-4">Butuh Suplai Rutin untuk Restoran?</h2>
                <p className="text-white/90 text-lg mb-6 md:mb-0">
-                 Dapatkan harga spesial kemitraan untuk pemesanan rutin telur puyuh atau daging puyuh dalam jumlah besar.
+                 Dapatkan harga spesial kemitraan untuk pemesanan rutin telur puyuh, daging, atau bibit puyuh dalam jumlah besar.
                </p>
             </div>
             <div className="relative z-10">
@@ -218,7 +152,6 @@ const Produk = () => {
                  Hubungi Mitra
                </button>
             </div>
-            {/* Hiasan Lingkaran */}
             <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-white/10 rounded-full blur-2xl"></div>
          </div>
       </div>

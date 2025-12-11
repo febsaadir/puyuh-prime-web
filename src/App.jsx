@@ -8,7 +8,7 @@ import Footer from './components/Footer';
 // Import Halaman (Isi konten yang berubah-ubah)
 import Home from './pages/Home';
 import Produk from './pages/Produk';
-import Harga from './pages/Harga';
+import Kemitraan from './pages/Kemitraan';
 import Tentang from './pages/Tentang';
 import Kontak from './pages/Kontak';
 
@@ -29,7 +29,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/produk" element={<Produk />} />
-            <Route path="/harga" element={<Harga />} />
+            <Route path="/kemitraan" element={<Kemitraan />} />
             <Route path="/tentang" element={<Tentang />} />
             <Route path="/kontak" element={<Kontak />} />
           </Routes>
