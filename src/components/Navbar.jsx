@@ -39,7 +39,7 @@ const Navbar = () => {
   const menuItems = [
     { name: 'Home', path: '/' },
     { name: 'Produk', path: '/produk' },
-    { name: 'Harga', path: '/harga' },
+    { name: 'Kemitraan', path: '/kemitraan' },
     { name: 'Tentang Kami', path: '/tentang' },
   ];
 
