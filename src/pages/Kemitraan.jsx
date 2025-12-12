@@ -1,36 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Handshake, TrendingUp, Users, Truck, CheckCircle, ArrowRight } from 'lucide-react';
+// Icon statis yang dipakai untuk UI halaman ini
+import { Truck, CheckCircle, ArrowRight, TrendingUp } from 'lucide-react';
+
+// IMPORT DATA DARI FILE TERPISAH
+import { packages } from '../data/packages';
 
 const Kemitraan = () => {
-  // Data Paket Kemitraan
-  const packages = [
-    {
-      title: "Reseller Pemula",
-      icon: <Users size={32} />,
-      cocok: "Ibu Rumah Tangga / Mahasiswa",
-      syarat: "Min. Order 10 Pack",
-      benefit: ["Diskon 10%", "Foto Produk Gratis", "Masuk Grup Support"],
-      color: "bg-white border-gray-200"
-    },
-    {
-      title: "Mitra Restoran",
-      icon: <Handshake size={32} />,
-      cocok: "Warung Makan / Catering",
-      syarat: "Langganan Rutin Mingguan",
-      benefit: ["Harga Khusus (Flat)", "Prioritas Stok", "Pembayaran Tempo"],
-      color: "bg-orange-50 border-puyuh-gold"
-    },
-    {
-      title: "Agen Wilayah",
-      icon: <TrendingUp size={32} />,
-      cocok: "Distributor Frozen Food",
-      syarat: "Target Bulanan",
-      benefit: ["Diskon Spesial 20%", "Support Marketing", "Area Proteksi"],
-      color: "bg-puyuh-dark text-white"
-    }
-  ];
-
   return (
     <div className="font-sans min-h-screen bg-puyuh-cream">
       
@@ -83,41 +59,52 @@ const Kemitraan = () => {
         </div>
       </section>
 
-      {/* --- PAKET PILIHAN --- */}
+      {/* --- PAKET PILIHAN (Looping Data dari File packages.js) --- */}
       <section className="pb-20 px-4 max-w-7xl mx-auto">
         <div className="grid md:grid-cols-3 gap-8 items-center">
-            {packages.map((pkg, idx) => (
-                <motion.div 
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    key={idx} 
-                    className={`rounded-3xl p-8 relative shadow-xl border ${pkg.color} flex flex-col h-full`}
-                >
-                    <div className="mb-4">{pkg.icon}</div>
-                    <h3 className="font-serif text-2xl font-bold mb-2">{pkg.title}</h3>
-                    <p className="text-sm opacity-80 mb-6">{pkg.cocok}</p>
-                    
-                    <div className="space-y-4 mb-8 flex-grow">
-                        <div className="text-sm font-bold opacity-70">Syarat: {pkg.syarat}</div>
-                        <ul className="space-y-2">
-                            {pkg.benefit.map((ben, i) => (
-                                <li key={i} className="flex items-center gap-2 text-sm">
-                                    <CheckCircle size={16} className="text-puyuh-gold" /> {ben}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+            {packages.map((pkg, idx) => {
+                // TRIK PERBAIKAN:
+                // Kita simpan komponen icon ke dalam variabel diawali huruf Besar (IconComponent)
+                // Agar React menganggapnya sebagai Komponen yang valid.
+                const IconComponent = pkg.icon;
 
-                    <button 
-                        onClick={() => window.open(`https://wa.me/628558288704?text=Halo%20Admin,%20saya%20berminat%20join%20${pkg.title}`, "_blank")}
-                        className="w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 bg-puyuh-gold text-white hover:brightness-110 transition shadow-lg"
+                return (
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: idx * 0.1 }}
+                        key={idx} 
+                        className={`rounded-3xl p-8 relative shadow-xl border ${pkg.color} flex flex-col h-full`}
                     >
-                        Daftar Sekarang <ArrowRight size={18} />
-                    </button>
-                </motion.div>
-            ))}
+                        {/* Render Icon dengan cara yang aman */}
+                        <div className="mb-4 text-current">
+                            <IconComponent size={32} />
+                        </div>
+
+                        <h3 className="font-serif text-2xl font-bold mb-2">{pkg.title}</h3>
+                        <p className="text-sm opacity-80 mb-6">{pkg.cocok}</p>
+                        
+                        <div className="space-y-4 mb-8 flex-grow">
+                            <div className="text-sm font-bold opacity-70">Syarat: {pkg.syarat}</div>
+                            <ul className="space-y-2">
+                                {pkg.benefit.map((ben, i) => (
+                                    <li key={i} className="flex items-center gap-2 text-sm">
+                                        <CheckCircle size={16} className="text-puyuh-gold" /> {ben}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <button 
+                            onClick={() => window.open(`https://wa.me/628558288704?text=Halo%20Admin,%20saya%20berminat%20join%20${pkg.title}`, "_blank")}
+                            className="w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 bg-puyuh-gold text-white hover:brightness-110 transition shadow-lg"
+                        >
+                            Daftar Sekarang <ArrowRight size={18} />
+                        </button>
+                    </motion.div>
+                );
+            })}
         </div>
       </section>
 
