@@ -7,8 +7,14 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
+  // --- LOGIKA WARNA BARU YANG DIPERBAIKI ---
+  
+  // Cek apakah user sedang berada di halaman Home ("/")
+  const isHomePage = location.pathname === '/';
+
   useEffect(() => {
     const handleScroll = () => {
+      // Jika discroll lebih dari 20px, aktifkan mode scrolled
       if (window.scrollY > 20) {
         setScrolled(true);
       } else {
@@ -19,21 +25,31 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // LOGIKA WARNA BARU:
-  // Jika discroll: teks abu-abu gelap. Jika di atas (transparan): teks putih terang.
-  const textColor = scrolled ? "text-gray-700" : "text-white";
-  const hoverColor = "hover:text-puyuh-gold";
+  // LOGIKA STYLE NAVBAR:
+  // 1. Jika di Home & belum scroll: Transparan, Teks Putih
+  // 2. Jika di Home & sudah scroll: Putih, Teks Gelap
+  // 3. Jika BUKAN di Home (Produk, Kontak, dll): SELALU Putih, Teks Gelap
+  
+  const isTransparent = isHomePage && !scrolled;
+
+  // Class untuk Background Navbar
+  const navBackground = isTransparent 
+    ? 'bg-transparent py-4' 
+    : 'bg-white shadow-md py-2';
+
+  // Class untuk Warna Teks Menu
+  const textColor = isTransparent ? 'text-white' : 'text-gray-700';
+  const logoColor = isTransparent ? 'text-white' : 'text-puyuh-dark';
+  const hamburgerColor = isTransparent ? 'text-white' : 'text-puyuh-dark';
 
   // Fungsi menandai menu aktif
   const getMenuClass = (path) => {
     const baseClass = "text-sm uppercase tracking-wide font-medium transition-colors duration-300";
     
-    // Jika menu ini aktif (sedang dibuka)
     if (location.pathname === path) {
       return `${baseClass} text-puyuh-gold font-bold`;
     }
-    // Jika tidak aktif
-    return `${baseClass} ${textColor} ${hoverColor}`;
+    return `${baseClass} ${textColor} hover:text-puyuh-gold`;
   };
 
   const menuItems = [
@@ -44,9 +60,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${
-      scrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'
-    }`}>
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${navBackground}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
@@ -56,8 +70,7 @@ const Navbar = () => {
               <div className="bg-puyuh-gold p-2 rounded-lg text-white shadow-md group-hover:scale-110 transition duration-300">
                 <ShoppingBag size={20} />
               </div>
-              {/* Warna tulisan PuyuhPrime juga menyesuaikan scroll */}
-              <h1 className={`font-serif text-2xl font-bold tracking-wide ${scrolled ? 'text-puyuh-dark' : 'text-white'}`}>
+              <h1 className={`font-serif text-2xl font-bold tracking-wide ${logoColor}`}>
                 Puyuh<span className="text-puyuh-gold">Prime</span>
               </h1>
             </Link>
@@ -78,7 +91,7 @@ const Navbar = () => {
               
               <Link 
                 to="/kontak" 
-                className="bg-puyuh-gold text-white px-6 py-2.5 rounded-full font-medium hover:bg-white hover:text-puyuh-gold hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                className="bg-puyuh-gold text-white px-6 py-2.5 rounded-full font-medium hover:bg-puyuh-dark hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
               >
                 Contact Us
               </Link>
@@ -89,7 +102,7 @@ const Navbar = () => {
           <div className="-mr-2 flex md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className={`inline-flex items-center justify-center p-2 rounded-md focus:outline-none ${scrolled ? 'text-puyuh-dark' : 'text-white'}`}
+              className={`inline-flex items-center justify-center p-2 rounded-md focus:outline-none ${hamburgerColor}`}
             >
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
