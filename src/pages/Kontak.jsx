@@ -1,20 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Phone, Instagram, Facebook, Youtube, 
-  MapPin, Send, Mail, ShoppingBag, Sparkles, User, Bot 
+  Phone, MapPin, Send, Mail, ShoppingBag, Sparkles, User, Bot 
 } from 'lucide-react';
-// Import Library Google Gemini
+
+// IMPORT LIBRARY GOOGLE GEMINI
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+// IMPORT DATA DARI FILE TERPISAH
+import { socialMedia, foodDelivery } from '../data/socials';
+
 const Kontak = () => {
-  // --- KONFIGURASI AI GEMINI ---
-  // API Key Anda (Sebaiknya di production disimpan di .env, tapi untuk belajar oke ditaruh sini)
-  const API_KEY = "AIzaSyAJ4CKeSt1NnEGrvXSHSV-Uj5k51bjhqzQ"; 
-  const genAI = new GoogleGenerativeAI(API_KEY);
+  // --- KONFIGURASI AI GEMINI (VIA .ENV) ---
+  // Pastikan Anda sudah membuat file .env dan restart server
+  const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+  
+  // Inisialisasi hanya jika API Key ada
+  const genAI = API_KEY ? new GoogleGenerativeAI(API_KEY) : null;
 
   const [messages, setMessages] = useState([
-    { id: 1, sender: 'bot', text: 'Halo! Saya Asisten Cerdas PuyuhPrime 🤖. Mau tanya resep olahan puyuh, harga telur, atau tips beternak? Silakan tanya saya!' }
+    { id: 1, sender: 'bot', text: 'Halo! Saya CS Cerdas PuyuhPrime 🤖. Mau tanya resep olahan puyuh, harga telur, atau tips beternak? Ayo tanya saya!' }
   ]);
   const [inputMsg, setInputMsg] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -29,28 +34,34 @@ const Kontak = () => {
     e.preventDefault();
     if (!inputMsg.trim()) return;
 
-    // 1. Tampilkan pesan user di layar
+    // 1. Tampilkan pesan user
     const userText = inputMsg;
     setMessages(prev => [...prev, { id: Date.now(), sender: 'user', text: userText }]);
     setInputMsg('');
     setIsTyping(true);
 
+    // Cek jika API Key belum dipasang
+    if (!genAI) {
+      setTimeout(() => {
+        setMessages(prev => [...prev, { id: Date.now()+1, sender: 'bot', text: "⚠️ Maaf, API Key Google Gemini belum terpasang di file .env. Mohon konfigurasi terlebih dahulu." }]);
+        setIsTyping(false);
+      }, 1000);
+      return;
+    }
+
     try {
       // 2. Panggil Google Gemini AI
       const model = genAI.getGenerativeModel({ model: "gemini-pro"});
       
-      // 3. Berikan 'Konteks' agar AI berakting sebagai Asisten PuyuhPrime
       const prompt = `
         Bertindaklah sebagai Customer Service yang ramah dan profesional untuk bisnis bernama "PuyuhPrime".
-        
         Info Bisnis:
-        - Produk: Telur Puyuh Grade A, Daging Puyuh Bersih, Puyuh Ungkep, Sate Puyuh, dan Kebutuhan Peternakan (Pakan, Bibit, Obat).
+        - Produk: Telur Puyuh Grade A, Daging Puyuh Bersih, Puyuh Ungkep, Sate Puyuh, dan Kebutuhan Peternakan.
         - Lokasi: Tangerang Selatan.
         - Kelebihan: Fresh, Higienis, Tanpa Pengawet.
         
         Tugas Anda:
-        Jawab pertanyaan customer berikut dengan singkat (maksimal 3 kalimat), gunakan emoji yang ceria, dan Bahasa Indonesia yang santai tapi sopan.
-        
+        Jawab pertanyaan customer berikut dengan singkat (maksimal 3 kalimat), gunakan emoji yang ceria.
         Pertanyaan Customer: ${userText}
       `;
 
@@ -58,28 +69,15 @@ const Kontak = () => {
       const response = await result.response;
       const text = response.text();
 
-      // 4. Tampilkan balasan AI
+      // 3. Tampilkan balasan AI
       setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'bot', text: text }]);
     } catch (error) {
       console.error("Error Gemini:", error);
-      setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'bot', text: "Maaf, koneksi ke otak AI sedang gangguan. Boleh coba tanya lagi?" }]);
+      setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'bot', text: "Maaf, sepertinya saya sedang pusing (Error Koneksi). Coba tanya lagi ya? 🤕" }]);
     } finally {
       setIsTyping(false);
     }
   };
-
-  // --- DATA KONTAK ---
-  const socialMedia = [
-    { name: "Instagram", icon: <Instagram size={24} />, url: "https://instagram.com", color: "hover:text-pink-600" },
-    { name: "Facebook", icon: <Facebook size={24} />, url: "https://facebook.com", color: "hover:text-blue-600" },
-    { name: "Youtube", icon: <Youtube size={24} />, url: "https://youtube.com", color: "hover:text-red-600" },
-  ];
-
-  const foodDelivery = [
-    { name: "GoFood", color: "bg-green-600", url: "#" },
-    { name: "GrabFood", color: "bg-green-500", url: "#" },
-    { name: "ShopeeFood", color: "bg-orange-500", url: "#" },
-  ];
 
   return (
     <div className="font-sans min-h-screen bg-puyuh-cream pt-32 pb-12 px-4">
@@ -101,12 +99,12 @@ const Kontak = () => {
 
         <div className="grid lg:grid-cols-2 gap-12 items-start">
           
-          {/* --- KOLOM KIRI: KONTAK PERSONAL (MANUSIA) --- */}
+          {/* --- KOLOM KIRI: KONTAK PERSONAL --- */}
           <motion.div 
             initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}
             className="space-y-8"
           >
-            {/* 1. WHATSAPP CARD (Highlight) */}
+            {/* WHATSAPP CARD */}
             <div className="bg-white p-8 rounded-3xl shadow-xl border-l-8 border-puyuh-gold relative overflow-hidden group">
               <div className="absolute right-0 top-0 opacity-5 transform translate-x-10 -translate-y-10">
                 <Phone size={150} />
@@ -122,7 +120,7 @@ const Kontak = () => {
               </button>
             </div>
 
-            {/* 2. FOOD DELIVERY */}
+            {/* FOOD DELIVERY */}
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                <h3 className="font-bold text-xl text-puyuh-dark mb-4 flex items-center gap-2">
                  <ShoppingBag className="text-puyuh-gold" /> Pesan Makanan Online
@@ -139,16 +137,19 @@ const Kontak = () => {
                </div>
             </div>
 
-            {/* 3. SOCIAL MEDIA & LOCATION */}
+            {/* SOCIAL MEDIA (Looping Data External) */}
             <div className="flex flex-col sm:flex-row gap-6">
                <div className="flex-1 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center">
                   <h4 className="font-bold text-gray-700 mb-4">Ikuti Kami</h4>
                   <div className="flex gap-4">
-                    {socialMedia.map((soc, idx) => (
-                      <a key={idx} href={soc.url} className={`text-gray-400 transition ${soc.color}`}>
-                        {soc.icon}
-                      </a>
-                    ))}
+                    {socialMedia.map((soc, idx) => {
+                      const Icon = soc.icon; // Render Icon Aman
+                      return (
+                        <a key={idx} href={soc.url} className={`text-gray-400 transition ${soc.color}`}>
+                          <Icon size={24} />
+                        </a>
+                      );
+                    })}
                   </div>
                </div>
                
@@ -162,7 +163,7 @@ const Kontak = () => {
           </motion.div>
 
 
-          {/* --- KOLOM KANAN: AI CHAT (REAL GEMINI) --- */}
+          {/* --- KOLOM KANAN: AI CHAT --- */}
           <motion.div 
             initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
             className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 h-[600px] flex flex-col"
@@ -231,12 +232,15 @@ const Kontak = () => {
                    <Send size={20} />
                  </button>
                </div>
+               <p className="text-[10px] text-center text-gray-400 mt-2">
+                 Powered by Google Gemini AI.
+               </p>
             </form>
           </motion.div>
 
         </div>
 
-        {/* --- NEWSLETTER SECTION --- */}
+        {/* --- NEWSLETTER --- */}
         <div className="mt-20 bg-puyuh-gold rounded-3xl p-8 md:p-12 relative overflow-hidden text-center text-white shadow-xl">
            <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
            <div className="relative z-10 max-w-2xl mx-auto">
